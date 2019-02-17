@@ -112,7 +112,7 @@ function seq(p :: Parser{A}, atleast :: Number, atmost :: Number) :: Parser{Vect
                 end
                 push!(res, elt.value)
             end
-            length(res) < atleast ?
+            length(res) <= atleast ?
                 (nothing, stream) :
                 (Some(res), remained)
         end :
@@ -120,13 +120,16 @@ function seq(p :: Parser{A}, atleast :: Number, atmost :: Number) :: Parser{Vect
             res :: Vector{A} = []
             remained = stream
             while true
+                if length(res) >= atmost
+                    break
+                end
                 (elt, remained) = p(remained)
-                if elt === nothing || length(res) > atmost
+                if elt === nothing
                     break
                 end
                 push!(res, elt.value)
             end
-            length(res) < atleast ?
+            length(res) <= atleast ?
                 (nothing, stream) :
                 (Some(res), remained)
         end
@@ -139,6 +142,36 @@ getindex(p :: Parser{A}, atleast :: Int, atmost :: T) where {A, T <: Number} =
     seq(p, atleast, atmost)
 # # Test:
 # @info parse((parse_id | parse_val)[0], mock_stream)
+
+mock_stream4 = [
+    Token(:keyword, "let", 1, 1, 1, "..."),
+    Token(:identifier, "a", 1, 2, 1, "..."),
+    Token(:keyword, "let", 1, 3, 1, "..."),
+    Token(:identifier, "a", 1, 4, 1, "..."),
+]
+mock_stream5 = [
+    Token(:a, "a", 1, 1, 1, "..."),
+    Token(:b, "b", 1, 2, 1, "..."),
+]
+mock_stream6 = [
+    Token(:identifier, "a", 1, 2, 1, "..."),
+    Token(:identifier, "a", 1, 2, 1, "..."),
+    Token(:identifier, "a", 1, 3, 1, "..."),
+    Token(:identifier, "a", 1, 4, 1, "..."),
+]
+# @info parse((parse_id | parse_val)[0], mock_stream4) # remained = []
+
+# @info parse((parse_id | parse_val)[1], mock_stream4) # remained = []
+# @info parse((parse_id | parse_val)[1], mock_stream5) # result = nothing
+
+# @info parse((parse_id | parse_val)[1,2], mock_stream4) # len(result) = len(remain) = 2
+# @info parse(parse_id[1,2], mock_stream6) # len(result) = len(remain) = 2
+
+#=
+ref: 一个parserc的教程 - 综合讨论区 / Julia入门 - Julia中文社区
++ [添加等号](https://discourse.juliacn.com/t/topic/1431/2)
++ [修改判断顺序](https://discourse.juliacn.com/t/topic/1431/4)
+=#
 
 opt(p :: Parser{A}) where A =
     Parser{Maybe{A}}(
