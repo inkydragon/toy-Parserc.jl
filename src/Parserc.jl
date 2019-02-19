@@ -3,7 +3,7 @@ Parsec:
 - Julia version: 1.1.0
 =#
 
-module Parsec
+module Parserc
 
 using MLStyle
 
@@ -60,4 +60,4 @@ lex(
     "a.txt"
 ) |> ( x -> foreach(println, x) )
 
-end # module Parsec
+end # module Parserc
