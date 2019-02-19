@@ -3,7 +3,7 @@ Combinator:
 - Julia version: 1.1.0
 =#
 
-import Base: (&), (|), (<<), (>>), getindex
+import Base: (&), (|), (!), (<<), (>>), getindex
 using Test
 
 Stream{T} = AbstractArray{T, 1}
