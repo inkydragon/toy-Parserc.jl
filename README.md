@@ -11,5 +11,5 @@ toy-Parserc.jl: A toy Parserc in julia
 
 ### TODO:
 - [x] Code from Video 1
-- [ ] Code from Video 2
+- [x] Code from Video 2
 - [ ] Code from Video 3
