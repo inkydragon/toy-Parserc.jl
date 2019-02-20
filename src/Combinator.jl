@@ -214,3 +214,6 @@ end
 # println(parse(!parse_id, mock_stream3)) # Backup
 
 #= av43674707 END =#
+
+(>>)(a :: Parser{A}, b :: Parser{B}) where {A, B} = (a & b) ⇒ Fn{Tuple{A, B}, B}(((a, b), ) -> b)
+(<<)(a :: Parser{A}, b :: Parser{B}) where {A, B} = (a & b) ⇒ Fn{Tuple{A, B}, A}(((a, b), ) -> a)
