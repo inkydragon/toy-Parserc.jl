@@ -108,9 +108,9 @@ lexer_table = [
 
 # Test text
 text = "(a 1 2) (d e (e f g)) ('abc') #"
-lex(
-    text,
-    convert(LexerTable, lexer_table),
-    Reserved(),
-    "a.txt"
-) |> ( x -> foreach(println, x) ) ∘ collect
+# lex(
+#     text,
+#     convert(LexerTable, lexer_table),
+#     Reserved(),
+#     "a.txt"
+# ) |> ( x -> foreach(println, x) ) ∘ collect
